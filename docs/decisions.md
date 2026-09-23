@@ -2,32 +2,32 @@
 
 ## 1. Customer Problem
 
-Hotel guests frequently need quick answers to practical questions such as:
+Hotel guests usually want quick answers to simple practical questions, for example:
 
 - What time is check-in?
 - Is breakfast included?
-- What rooms are available for my group?
-- What amenities does the hotel have?
+- What rooms can fit my group?
+- What amenities are available?
 - What are the cancellation rules?
 
-The product goal is to provide these answers through a conversational interface rather than requiring guests to search through multiple hotel pages or documents.
+For this project, I wanted the guest to get these answers through one conversation instead of searching through different hotel pages or documents.
 
-For availability requests, the assistant should collect the required information and return relevant room options.
+For availability questions, the assistant should collect the information it needs and then return the room types that match the request.
 
 ---
 
 ## 2. Guest Journey
 
-The intended guest journey is:
+The main guest flow I designed is:
 
 ```text
 Open assistant
     ↓
 Ask a hotel question
     ↓
-Receive a grounded answer
+Receive an answer based on hotel data
     ↓
-Ask follow-up questions
+Ask a follow-up question
     ↓
 If checking availability:
     ↓
@@ -36,13 +36,13 @@ Provide dates + number of guests
 Receive eligible room options
 ```
 
-The experience is designed to feel like a single conversation rather than a collection of separate forms.
+I wanted this to feel like one continuous conversation rather than making the guest fill out a separate form for every task.
 
 ---
 
 ## 3. Why a Conversational UI?
 
-A conversational interface is appropriate because hotel guests may express the same need in many different ways.
+A chat interface made sense for this use case because guests can ask the same thing in different ways.
 
 For example:
 
@@ -50,13 +50,13 @@ For example:
 - "When is check-in?"
 - "What time does check-in start?"
 
-These questions should map to the same hotel information.
+All of these should lead to the same hotel information.
 
-For availability, guests may also naturally ask:
+Availability can also be asked naturally, for example:
 
 > "Do you have a room from 2026-09-25 to 2026-09-27 for 3 guests?"
 
-The chat interface allows the product to handle this natural-language interaction while still using structured validation behind the scenes.
+The chat layer can understand the request, while the backend still validates the important information before returning a result.
 
 ---
 
@@ -73,17 +73,11 @@ The frontend uses:
 
 ### Why
 
-Next.js and React provide a straightforward way to build:
+I chose Next.js and React because they give me a straightforward way to build the chat interface, manage conversation state, connect to the backend API, and handle loading and error states.
 
-- a responsive conversational interface;
-- reusable UI components;
-- client-side conversation state;
-- API integration;
-- loading and error states.
+TypeScript is useful because the frontend receives structured responses from the backend. Having explicit types makes it easier to keep the UI and API response formats consistent.
 
-TypeScript helps make the frontend API data structures explicit and reduces accidental mismatches between the UI and backend responses.
-
-The interface was intentionally kept focused on the guest task instead of adding unnecessary screens.
+I also kept the interface focused on the main guest task instead of adding unnecessary screens.
 
 ---
 
@@ -99,15 +93,9 @@ The backend uses:
 
 ### Why
 
-FastAPI provides:
+FastAPI worked well for this project because it provides clear API definitions, request validation, automatic API documentation, and a lightweight structure.
 
-- clear HTTP API definitions;
-- request validation;
-- useful automatic API documentation;
-- a lightweight structure suitable for the assignment;
-- good separation between API routes and service logic.
-
-Python also makes it simple to keep hotel-data processing and deterministic availability logic in small, testable modules.
+Python also made it easy to keep the hotel-data lookup and availability logic in small modules that can be tested separately.
 
 ---
 
@@ -119,23 +107,23 @@ The hotel information is stored in:
 backend/data/hotel.json
 ```
 
-This was chosen instead of introducing a database because the assignment is a small local prototype.
+I used a JSON file instead of a database because this is a small prototype for the assignment. A database would add extra setup without providing much benefit for the current scope.
 
-The JSON file contains structured information about:
+The JSON contains:
 
 - hotel details;
 - room types;
 - room capacities;
 - prices;
 - amenities;
-- dining;
+- dining information;
 - policies;
-- accessibility;
+- accessibility information;
 - frequently asked questions.
 
-This makes the source of truth easy to inspect and modify.
+One benefit of this approach is that I can easily see and change the source information.
 
-A production system could replace this with a database or a hotel/PMS data source without changing the overall frontend conversation flow.
+A production version could replace this file with a database or a hotel/PMS data source without needing to change the overall guest conversation flow.
 
 > **Important:** The hotel data is mock/demo data created for this assignment.
 
@@ -143,18 +131,18 @@ A production system could replace this with a database or a hotel/PMS data sourc
 
 ## 7. AI vs. Deterministic Logic
 
-One of the most important engineering decisions is to separate conversational interpretation from business-critical logic.
+One of the main design decisions was to keep conversational handling separate from important hotel business rules.
 
 ### Conversational responsibilities
 
-The chat layer handles:
+The chat layer handles things such as:
 
 - identifying the type of guest request;
-- recognizing availability-related questions;
-- extracting supported information from natural language;
+- recognizing availability questions;
+- extracting supported information from the message;
 - detecting missing information;
-- generating an appropriate response;
-- providing a safe fallback for unsupported requests.
+- deciding what response to return;
+- providing a fallback when the request is unsupported.
 
 ### Deterministic responsibilities
 
@@ -166,9 +154,9 @@ The service layer handles:
 - hotel-data lookup;
 - availability eligibility.
 
-This prevents business-critical rules from depending on an uncertain model response.
+I made this separation because business rules should not depend on an uncertain model response.
 
-For example, the system should not ask a model to decide whether a room can accommodate three guests when the room capacity is already explicitly defined in the hotel data.
+For example, if the hotel data says a room has a capacity of two, I don't want a model deciding that the room can somehow accommodate three guests.
 
 ---
 
@@ -176,37 +164,35 @@ For example, the system should not ask a model to decide whether a room can acco
 
 The current local version does not depend on a paid external LLM API.
 
-Instead, `ai_service.py` provides a deterministic conversational decision layer that:
+Instead, `ai_service.py` provides a deterministic conversational decision layer. It:
 
 1. normalizes the guest message;
 2. detects supported intents;
 3. extracts supported availability information;
-4. requests missing information when necessary;
+4. asks for missing information when needed;
 5. calls the deterministic availability service;
 6. returns hotel information from the configured knowledge base;
-7. provides a safe fallback for unsupported questions.
+7. gives a safe fallback for unsupported questions.
 
-This approach keeps the project runnable without requiring paid services or API credentials.
+I chose this approach so the project could run locally and be deployed without requiring paid API credentials.
 
 ### Limitation
 
 The assignment describes an AI-powered assistant and asks for appropriate LLM use. The current implementation is therefore intentionally transparent about its limitation: it does not make a live external LLM call.
 
-A production implementation could replace or extend the intent/extraction layer with an LLM while retaining the deterministic business services.
+For a production version, I could add an external or self-hosted LLM for natural-language intent detection and structured extraction while keeping the important business logic deterministic.
 
 ---
 
 ## 9. Hallucination Prevention
 
-The main hallucination-prevention strategy is grounding.
+The main approach I used to reduce hallucinations is to ground hotel answers in the configured hotel knowledge base.
 
-Hotel answers should come from the configured hotel knowledge base rather than invented facts.
+If the system does not have enough information to support a request, it should use a fallback instead of making up an answer.
 
-If the system cannot support a request from the available data, it uses a fallback response.
+For example, if someone asks about a private helicopter service that is not in the hotel data, the assistant should not invent one.
 
-For example, a question about a private helicopter service should not result in the assistant inventing such a service.
-
-This principle is particularly important for:
+This matters especially for:
 
 - prices;
 - hotel policies;
@@ -219,19 +205,19 @@ This principle is particularly important for:
 
 ## 10. Missing Information
 
-Availability requests require:
+An availability request needs:
 
 - check-in date;
 - check-out date;
 - number of guests.
 
-If a guest asks:
+If a guest only asks:
 
 > "Do you have a room?"
 
 the system should not guess the dates or number of guests.
 
-Instead, it asks the guest to provide the missing information.
+Instead, it asks the guest for the missing information.
 
 This keeps the conversation useful without silently making assumptions.
 
@@ -239,16 +225,16 @@ This keeps the conversation useful without silently making assumptions.
 
 ## 11. Structured API Responses
 
-The chat API returns structured information rather than only plain text.
+The chat API returns structured information instead of only returning plain text.
 
-A response can include:
+A response can contain:
 
 - assistant message;
 - response type;
 - availability data;
 - updated conversation context.
 
-This allows the frontend to make UI decisions based on explicit backend data.
+This makes the frontend easier to control because it does not have to try to extract structured information from a text response.
 
 For example:
 
@@ -256,59 +242,59 @@ For example:
 response_type = availability
 ```
 
-allows the frontend to render room cards instead of trying to parse availability information from a text response.
+tells the frontend that it can render room availability information in the appropriate UI.
 
 ---
 
 ## 12. Error Philosophy
 
-The product should fail safely.
+I wanted the system to fail clearly rather than pretend that something worked.
 
 ### Unsupported request
 
-Return a clear fallback rather than inventing information.
+Return a clear fallback instead of inventing information.
 
 ### Missing availability information
 
-Ask for the missing values.
+Ask the guest for the missing values.
 
 ### Invalid dates
 
-Reject invalid date ranges rather than attempting an availability lookup.
+Reject invalid date ranges instead of running an availability lookup.
 
 ### Frontend/API failure
 
-Show a visible error state so the guest knows the request was not completed.
+Show an error state so the guest knows that the request was not completed.
 
-The system should avoid presenting uncertain or fabricated information as confirmed hotel information.
+The important point is that uncertain information should not be presented as confirmed hotel information.
 
 ---
 
 ## 13. Availability Tradeoff
 
-The current availability implementation intentionally uses a simple mock model.
+The current availability implementation is intentionally simple.
 
-The hotel data contains room capacities, but does not contain real date-specific inventory.
+The hotel JSON contains room capacities, but it does not contain real date-specific room inventory.
 
-Therefore the current function validates the date range and returns room types that can accommodate the requested number of guests.
+Because of that, the current availability function validates the date range and returns room types that can accommodate the requested number of guests.
 
-This is useful for demonstrating:
+This is enough to demonstrate:
 
 - API design;
 - validation;
-- tool/service calling;
+- service/tool calling;
 - structured results;
 - frontend integration.
 
-However, it should not be represented as real-time hotel inventory.
+However, this should not be described as real-time hotel inventory.
 
-A production implementation would connect the availability service to a database, PMS, or inventory provider.
+A production version would connect the availability service to a database, PMS, or another inventory provider.
 
 ---
 
 ## 14. Production Improvements
 
-If the prototype were taken toward production, the following areas would be prioritized:
+If I were taking this prototype further, I would work on these areas first.
 
 ### Real inventory
 
@@ -316,7 +302,7 @@ Replace capacity-only matching with date-specific inventory from a hotel PMS or 
 
 ### LLM integration
 
-Use an external or self-hosted LLM for robust natural-language intent detection and structured extraction.
+Use an external or self-hosted LLM for more flexible natural-language intent detection and structured extraction.
 
 ### Tool calling
 
@@ -326,11 +312,11 @@ Expose deterministic backend functions such as:
 checkAvailability(checkIn, checkOut, adults)
 ```
 
-as controlled tools available to the conversational layer.
+as controlled tools for the conversational layer.
 
 ### Booking workflow
 
-Add a separate booking service rather than allowing a model to directly create reservations.
+Add a separate booking service instead of allowing a model to directly create reservations.
 
 ### Authentication
 
@@ -348,52 +334,54 @@ Add structured logs, metrics, tracing, and alerts for:
 
 ### Persistent conversations
 
-Store conversation state when the product requires continuity across sessions.
+Store conversation state if the product needs guests to continue their conversation across sessions.
 
 ### Security
 
-Use server-side secret management, strict CORS, rate limiting, input validation, and appropriate access controls.
+Use server-side secret management, strict CORS, rate limiting, input validation, and suitable access controls.
 
 ---
 
 ## 15. Measuring Usefulness
 
-Useful product measurements could include:
+For a real product, I would look at several measurements instead of relying on one number.
+
+Useful metrics could include:
 
 - percentage of guest questions answered successfully;
 - fallback rate;
 - availability-request completion rate;
-- percentage of conversations requiring repeated clarification;
+- number of conversations requiring repeated clarification;
 - API response latency;
 - frontend error rate;
 - tool/service failure rate;
 - guest satisfaction feedback;
 - successful completion of the intended guest task.
 
-These metrics should be evaluated together rather than relying on a single metric.
+These measurements would help show whether the assistant is actually helping guests rather than just producing responses.
 
 ---
 
 ## 16. AI Tools Used During Development
 
-AI assistance was used during development for tasks such as:
+I used AI assistance during development for things such as:
 
 - planning the application structure;
-- drafting implementation ideas;
+- discussing implementation ideas;
 - reviewing code;
 - creating test cases;
 - improving documentation;
 - identifying edge cases;
 - refining the conversational UI.
 
-The resulting implementation was tested locally and should be understood by the developer rather than treated as an unexplained generated artifact.
+I still tested the resulting implementation locally and verified the main application flows. The goal was to use AI as a development aid, not to include code or decisions that I could not explain.
 
 ---
 
 ## 17. Engineering Principle
 
-The overall design follows this principle:
+The main principle behind the project is:
 
 > **Keep the guest experience conversational, but keep important hotel business rules explicit, deterministic, testable, and grounded in trusted data.**
 
-This creates a useful balance between a natural guest experience and predictable software behavior.
+That gives the assistant a natural interface while keeping important parts of the system predictable.
