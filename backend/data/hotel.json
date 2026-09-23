@@ -1,0 +1,164 @@
+{
+  "hotel": {
+    "name": "StayMate Grand Hotel",
+    "tagline": "A smarter, simpler stay.",
+    "location": "Bengaluru, Karnataka, India",
+    "check_in": "3:00 PM",
+    "check_out": "11:00 AM",
+    "front_desk": "24/7",
+    "wifi": {
+      "available": true,
+      "complimentary": true,
+      "coverage": "Throughout the hotel"
+    },
+    "parking": {
+      "available": true,
+      "complimentary": true,
+      "notes": "Subject to availability"
+    },
+    "currency": "INR"
+  },
+  "rooms": [
+    {
+      "id": "deluxe-king",
+      "name": "Deluxe King",
+      "capacity": 2,
+      "bed_configuration": "1 King bed",
+      "price_per_night": 6500,
+      "features": [
+        "King bed",
+        "Work desk",
+        "Smart TV",
+        "Wi-Fi",
+        "Air conditioning",
+        "City view"
+      ],
+      "breakfast_included": false
+    },
+    {
+      "id": "deluxe-twin",
+      "name": "Deluxe Twin",
+      "capacity": 2,
+      "bed_configuration": "2 Single beds",
+      "price_per_night": 6500,
+      "features": [
+        "Two single beds",
+        "Work desk",
+        "Smart TV",
+        "Wi-Fi",
+        "Air conditioning",
+        "City view"
+      ],
+      "breakfast_included": false
+    },
+    {
+      "id": "premium-king",
+      "name": "Premium King",
+      "capacity": 2,
+      "bed_configuration": "1 King bed",
+      "price_per_night": 8500,
+      "features": [
+        "King bed",
+        "Larger room",
+        "Work desk",
+        "Smart TV",
+        "Wi-Fi",
+        "Air conditioning",
+        "City view"
+      ],
+      "breakfast_included": true
+    },
+    {
+      "id": "family-suite",
+      "name": "Family Suite",
+      "capacity": 4,
+      "bed_configuration": "1 King bed + 2 Single beds",
+      "price_per_night": 11000,
+      "features": [
+        "Separate living area",
+        "King bed",
+        "Two single beds",
+        "Work desk",
+        "Smart TV",
+        "Wi-Fi",
+        "Air conditioning",
+        "City view"
+      ],
+      "breakfast_included": true
+    }
+  ],
+  "amenities": {
+    "swimming_pool": {
+      "available": true,
+      "location": "Rooftop",
+      "hours": "6:00 AM - 10:00 PM"
+    },
+    "fitness_centre": {
+      "available": true,
+      "location": "Level 2",
+      "hours": "5:00 AM - 11:00 PM"
+    }
+  },
+  "dining": {
+    "restaurant": {
+      "available": true,
+      "breakfast": "6:30 AM - 10:30 AM",
+      "lunch": "12:30 PM - 3:00 PM",
+      "dinner": "7:00 PM - 11:00 PM"
+    },
+    "breakfast": {
+      "complimentary_rooms": [
+        "Premium King",
+        "Family Suite"
+      ],
+      "paid_option_rooms": [
+        "Deluxe King",
+        "Deluxe Twin"
+      ],
+      "hours": "6:30 AM - 10:30 AM"
+    }
+  },
+  "policies": {
+    "cancellation": {
+      "free_cancellation": "Up to 48 hours before check-in",
+      "late_cancellation": "Within 48 hours of check-in, the first night's room charge applies",
+      "no_show": "The first night's room charge applies"
+    },
+    "early_check_in": "Subject to availability. Requests can be made at the front desk.",
+    "late_check_out": "Subject to availability. Additional charges may apply.",
+    "children": "Children are welcome. Children under 6 stay free when using existing bedding. Extra bedding is subject to availability and additional charges.",
+    "pets": "Pets are not permitted. Service animals are accommodated according to applicable requirements.",
+    "smoking": "The hotel is non-smoking. Designated outdoor smoking areas are available."
+  },
+  "accessibility": {
+    "accessible_rooms": "Available upon request and subject to availability.",
+    "features": [
+      "Step-free main entrance",
+      "Accessible public restroom",
+      "Accessible parking spaces",
+      "Elevator access"
+    ]
+  },
+  "check_in_requirements": {
+    "identification": "Government-issued photo identification is required at check-in.",
+    "international_guests": "International guests may be required to provide passport and applicable travel documentation."
+  },
+  "faq": [
+    {
+      "question": "Is Wi-Fi free?",
+      "answer": "Yes. Complimentary Wi-Fi is available throughout the hotel."
+    },
+    {
+      "question": "Is parking available?",
+      "answer": "Yes. Complimentary parking is available subject to space."
+    },
+    {
+      "question": "Is the hotel pet friendly?",
+      "answer": "Pets are not permitted. Service animals are accommodated according to applicable requirements."
+    },
+    {
+      "question": "Is smoking allowed?",
+      "answer": "The hotel is non-smoking, with designated outdoor smoking areas available."
+    }
+  ]
+}
