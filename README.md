@@ -2,9 +2,17 @@
 
 StayMate AI is a full-stack hotel guest assistant designed to help hotel guests quickly get answers about a property's rooms, amenities, policies, dining, and stay eligibility.
 
+## Live Demo
+
+- Frontend: https://dhayanand458.github.io/staymate-ai/
+- Backend health: https://staymate-ai-backend-rdr0.onrender.com/api/health
+- GitHub: https://github.com/Dhayanand458/staymate-ai
+
+> The frontend is deployed on GitHub Pages and the FastAPI backend is deployed on Render.
+
 This project was built as a practical software-engineering assignment using a Next.js/React frontend and a FastAPI/Python backend.
 
-> **Implementation note:** The current project is a local, deterministic demonstration. It does not require a paid API or external LLM service. Hotel answers are grounded in the local JSON knowledge base, while availability and validation are handled by deterministic backend logic.
+> **Implementation note:** The current project is a deployed assignment prototype using a deterministic conversational layer. It does not require a paid API or external LLM service. Hotel answers are grounded in the local JSON knowledge base, while availability and validation are handled by deterministic backend logic.
 
 ---
 
@@ -71,7 +79,7 @@ StayMate provides a conversational interface where guests can:
 - Missing-information handling
 - Conversation context
 - Input validation
-- CORS configuration for local frontend development
+- CORS configuration for local and deployed frontend
 - Automated tests
 - Swagger/OpenAPI documentation
 
@@ -923,7 +931,7 @@ The project is evaluated against the following scenarios.
 
 # 24. Production Improvements
 
-The current application is scoped as a local assignment implementation.
+The current application is scoped as an assignment prototype.
 
 A production version could add:
 
@@ -999,14 +1007,15 @@ The current local implementation does not require API keys.
 
 The frontend does not contain backend secrets.
 
-CORS is explicitly configured for:
+The backend CORS configuration supports local development and the deployed
+GitHub Pages frontend.
 
-```text
-http://localhost:3000
-http://127.0.0.1:3000
-```
+Local origins:
+- http://localhost:3000
+- http://127.0.0.1:3000
 
-For production, CORS should be restricted to the deployed frontend origin.
+Deployed frontend:
+- https://dhayanand458.github.io
 
 Generated files and environment-specific secrets should not be committed.
 
@@ -1032,7 +1041,7 @@ The project intentionally keeps business-critical hotel logic deterministic and 
 
 # 27. Known Limitations
 
-This is a local demonstration rather than a production hotel reservation system.
+This is an assignment prototype rather than a production hotel reservation system.
 
 Known limitations:
 
